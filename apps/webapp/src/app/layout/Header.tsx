@@ -1,13 +1,14 @@
 import { Button } from "@/shared/ui/button";
 import { LogOut, Menu } from "lucide-react";
-import { useAuth } from "@/app/AuthContext";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/shared/ui/sheet";
 import Sidebar from "@/components/sidebar";
+import { useUser } from "@/features/auth/application/use-user";
+import { useLogout } from "@/features/auth/application/use-logout";
 
 const APP_CONFIG = {
-  EXAMS: {
-    MIN_PASSING_SCORE: 40,
+  SALES: {
+    MIN_CALL_RATIO: 40,
   },
 };
 
@@ -20,8 +21,14 @@ interface HeaderProps {
 }
 
 export function Header({ user, onLogout }: HeaderProps) {
-  const { user: authUser, logout } = useAuth();
-  const currentUser = user || authUser;
+  const { data: authUser } = useUser();
+  const { logout } = useLogout();
+
+  const displayUser = user || (authUser ? {
+    fullName: `${authUser.firstName} ${authUser.lastName}`,
+    userType: authUser.platformRole || authUser.organizationRole || 'User'
+  } : null);
+
   const handleLogout = onLogout || logout;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -46,15 +53,15 @@ export function Header({ user, onLogout }: HeaderProps) {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">E</span>
+              <span className="text-primary-foreground font-bold text-lg">S</span>
             </div>
-            <span className="text-xl font-bold tracking-tight">ExamDex</span>
+            <span className="text-xl font-bold tracking-tight">SalesDex</span>
           </div>
 
           {/* Mobile User Info */}
           <div className="ml-auto flex items-center gap-2">
             <div className="text-right">
-              <p className="text-sm font-medium truncate max-w-[120px]">{currentUser?.fullName}</p>
+              <p className="text-sm font-medium truncate max-w-[120px]">{displayUser?.fullName}</p>
             </div>
             <Button
               variant="ghost"
@@ -76,7 +83,7 @@ export function Header({ user, onLogout }: HeaderProps) {
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted border border-border shadow-sm">
               <div className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
               <span className="text-[11px] font-semibold text-muted-foreground">
-                Min Score: {APP_CONFIG.EXAMS.MIN_PASSING_SCORE}%
+                Call Ratio: {APP_CONFIG.SALES.MIN_CALL_RATIO}%
               </span>
             </div>
           </div>
@@ -84,9 +91,9 @@ export function Header({ user, onLogout }: HeaderProps) {
           {/* User Section */}
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-sm font-bold">{currentUser?.fullName}</p>
+              <p className="text-sm font-bold">{displayUser?.fullName}</p>
               <p className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
-                {currentUser?.userType}
+                {displayUser?.userType}
               </p>
             </div>
             <Button

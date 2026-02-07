@@ -1,9 +1,10 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import { ROUTES } from "./routes.config";
 import { ProtectedLayout } from "./layout/ProtectedLayout";
+import { LoginPage } from "@/features/auth/presentation/pages/login-page";
+import { RegisterPage } from "@/features/auth/presentation/pages/register-page";
 
 // Placeholder Components
-const LoginForm = () => <div>Login Page</div>;
 const DashboardPage = () => <div>Dashboard Home</div>;
 const UsersPage = () => <div>Users Page</div>;
 const AdminsPage = () => <div>Admins Page</div>;
@@ -16,7 +17,11 @@ export function AppRouter() {
 const router = createBrowserRouter([
     {
         path: ROUTES.LOGIN,
-        element: <LoginForm />,
+        element: <LoginPage />,
+    },
+    {
+        path: "/register",
+        element: <RegisterPage />,
     },
     {
         element: <ProtectedLayout />,

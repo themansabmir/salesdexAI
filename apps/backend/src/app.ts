@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -7,7 +7,7 @@ import { config } from '@/config';
 import { createMainRouter } from '@/core/routes';
 import { errorHandler, requestLogger } from '@/core/middleware';
 
-export const createApp = () => {
+export const createApp = () :Express=> {
     const app = express();
 
     // Middleware

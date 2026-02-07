@@ -3,12 +3,15 @@ export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'SALES_PERSON';
 export type User = {
     id: string;
     email: string;
-    password?: string;
-    firstName?: string;
-    lastName?: string;
+    firstName?: string | null;
+    lastName?: string | null;
     platformRole?: UserRole | null;
     organizationRole?: UserRole | null;
     organizationId?: string | null;
-    createdAt: Date;
-    updatedAt: Date;
+};
+
+export type AuthState = {
+    user: User | null;
+    accessToken: string | null;
+    isAuthenticated: boolean;
 };

@@ -73,6 +73,7 @@ model User {
   id        String   @id @default(cuid())
   clerkId   String   @unique // Clerk authentication ID
   email     String   @unique
+  password  String?
   firstName String?
   lastName  String?
   imageUrl  String?
