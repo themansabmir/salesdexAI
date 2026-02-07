@@ -1,0 +1,39 @@
+{
+    "name": "backend",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "nodemon -r tsconfig-paths/register src/main.ts",
+        "build": "tsc",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "@prisma/client": "^7.3.0",
+        "@prisma/adapter-pg": "^7.3.0",
+        "@types/express": "^5.0.6",
+        "bcrypt": "^6.0.0",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.6",
+        "dotenv": "^17.2.4",
+        "express": "^5.2.1",
+        "helmet": "^8.1.0",
+        "jsonwebtoken": "^9.0.3",
+        "morgan": "^1.10.1",
+        "nodemon": "^3.1.11",
+        "pg": "^8.18.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.3",
+        "zod": "^4.3.6"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^6.0.0",
+        "@types/cookie-parser": "^1.4.10",
+        "@types/cors": "^2.8.19",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/morgan": "^1.9.10",
+        "@types/node": "^25.2.1",
+        "@types/pg": "^8.16.0",
+        "prisma": "^7.3.0",
+        "tsconfig-paths": "^4.2.0"
+    }
+}

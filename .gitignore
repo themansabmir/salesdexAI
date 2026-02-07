@@ -1,0 +1,21 @@
+# dependencies
+node_modules
+.pnpm-debug.log*
+
+# build outputs
+dist
+.next
+out
+build
+
+# turbo
+.turbo
+
+# env
+.env
+.env.local
+.env.*.local
+
+# misc
+.DS_Store
+*.log
