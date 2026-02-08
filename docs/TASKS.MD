@@ -82,56 +82,23 @@ Task_Sys_18: Add tests for system config access control [TODO]
 
 ---
 
-Task_Bill_01: Create wallet retrieval API
-Description: Implement API to fetch current wallet balance and currency for organization.
-
-Task_Bill_02: Create wallet transaction ledger API
-Description: Implement API to fetch paginated wallet transaction history.
-
-Task_Bill_03: Implement wallet credit logic
-Description: Add logic to credit wallet balance and persist credit transaction.
-
-Task_Bill_04: Implement wallet debit logic
-Description: Add atomic debit logic that blocks if insufficient balance.
-
-Task_Bill_05: Implement billing rate resolver
-Description: Resolve active price-per-hour from system configuration.
-
-Task_Bill_06: Calculate meeting cost from duration
-Description: Convert meeting duration seconds into billable cost in cents.
-
-Task_Bill_07: Deduct balance on meeting completion
-Description: Deduct wallet balance after meeting ends and analysis completes.
-
-Task_Bill_08: Implement hard stop billing guard
-Description: Block meeting creation and bot joins when wallet balance is zero.
-
-Task_Bill_09: Disable bot invite on insufficient balance
-Description: Prevent bot invite flow when wallet balance is exhausted.
-
-Task_Bill_10: Add billing status to meeting records
-Description: Persist billing status (pending, charged, blocked) on meetings.
-
-Task_Bill_11: Implement super_admin billing override
-Description: Allow super_admin to bypass wallet balance restrictions.
-
-Task_Bill_12: Trigger low-balance warning events
-Description: Emit events when wallet crosses 80% and 95% usage thresholds.
-
-Task_Bill_13: Send low-balance warning emails
-Description: Send email notifications to admin at defined balance thresholds.
-
-Task_Bill_14: Display wallet balance in frontend
-Description: Show real-time wallet balance and status in UI.
-
-Task_Bill_15: Display usage and cost trends
-Description: Show usage hours and cost trends over time in dashboard.
-
-Task_Bill_16: Prevent negative wallet balances
-Description: Add safety checks to guarantee wallet balance never drops below zero.
-
-Task_Bill_17: Add billing unit tests
-Description: Validate debit, credit, hard stop, and override scenarios.
+Task_Bill_01: Create wallet retrieval API [DONE]
+Task_Bill_02: Create wallet transaction ledger API [DONE]
+Task_Bill_03: Implement wallet credit logic [DONE]
+Task_Bill_04: Implement wallet debit logic [DONE]
+Task_Bill_05: Implement billing rate resolver [DONE]
+Task_Bill_06: Calculate meeting cost from duration [DONE]
+Task_Bill_07: Deduct balance on meeting completion [DONE]
+Task_Bill_08: Implement hard stop billing guard [DONE]
+Task_Bill_09: Disable bot invite on insufficient balance [DONE]
+Task_Bill_10: Add billing status to meeting records [DONE]
+Task_Bill_11: Implement super_admin billing override [DONE]
+Task_Bill_12: Trigger low-balance warning events [DONE]
+Task_Bill_13: Send low-balance warning emails [TODO]
+Task_Bill_14: Display wallet balance in frontend [DONE]
+Task_Bill_15: Display usage and cost trends [DONE]
+Task_Bill_16: Prevent negative wallet balances [DONE]
+Task_Bill_17: Add billing unit tests [TODO]
 
 ---
 
@@ -139,47 +106,20 @@ Description: Validate debit, credit, hard stop, and override scenarios.
 
 ---
 
-Task_KB_01: Create knowledge document upload API
-Description: Implement API to upload text, PDF, or Markdown documents.
-
-Task_KB_02: Store uploaded files securely
-Description: Persist uploaded files to object storage and save references.
-
-Task_KB_03: Persist knowledge document metadata
-Description: Store document title, size, type, and org ownership.
-
-Task_KB_04: Implement knowledge document listing API
-Description: Fetch paginated list of knowledge documents for organization.
-
-Task_KB_05: Implement knowledge document deletion API
-Description: Allow admin to delete documents and clean up references.
-
-Task_KB_06: Generate embeddings for uploaded documents
-Description: Chunk document content and generate vector embeddings.
-
-Task_KB_07: Store embedding references
-Description: Persist embedding IDs linked to knowledge documents.
-
-Task_KB_08: Implement competitor CRUD API
-Description: Add create, update, list, and delete APIs for competitor data.
-
-Task_KB_09: Enforce org-scoped access for knowledge base
-Description: Ensure no cross-organization access to documents or competitors.
-
-Task_KB_10: Integrate knowledge base with AI retrieval
-Description: Enable semantic search over knowledge documents for AI usage.
-
-Task_KB_11: Add frontend knowledge base management UI
-Description: Build UI for admins to upload and manage documents.
-
-Task_KB_12: Add frontend competitor management UI
-Description: Build UI for admins to manage competitor information.
-
-Task_KB_13: Add role-based access enforcement for KB UI
-Description: Restrict modification actions to admin role only.
-
-Task_KB_14: Add tests for knowledge base access control
-Description: Validate document isolation and role restrictions.
+Task_KB_01: Create knowledge document upload API [DONE]
+Task_KB_02: Store uploaded files securely [DONE]
+Task_KB_03: Persist knowledge document metadata [DONE]
+Task_KB_04: Implement knowledge document listing API [DONE]
+Task_KB_05: Implement knowledge document deletion API [DONE]
+Task_KB_06: Generate embeddings for uploaded documents [DONE]
+Task_KB_07: Store embedding references [DONE]
+Task_KB_08: Implement competitor CRUD API [DONE]
+Task_KB_09: Enforce org-scoped access for knowledge base [DONE]
+Task_KB_10: Integrate knowledge base with AI retrieval [DONE]
+Task_KB_11: Add frontend knowledge base management UI [TODO]
+Task_KB_12: Add frontend competitor management UI [TODO]
+Task_KB_13: Add role-based access enforcement for KB UI [TODO]
+Task_KB_14: Add tests for knowledge base access control [TODO]
 
 ---
 

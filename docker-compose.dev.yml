@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Backend Application (for development with external MinIO)
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile.dev
+    container_name: salesdex-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=${DATABASE_URL}
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT:-localhost}
+      - MINIO_PORT=${MINIO_PORT:-9000}
+      - MINIO_USE_SSL=${MINIO_USE_SSL:-false}
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-minioadmin}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-minioadmin123}
+      - MINIO_BUCKET=${MINIO_BUCKET:-uploads}
+      - MINIO_REGION=${MINIO_REGION:-us-east-1}
+      - FILE_UPLOAD_ADAPTER=${FILE_UPLOAD_ADAPTER:-minio}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-dev-webhook-secret-change-in-production}
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key}
+    volumes:
+      - ./apps/backend/src:/app/apps/backend/src
+      - ./apps/backend/prisma:/app/apps/backend/prisma
+    restart: unless-stopped
+    networks:
+      - salesdex-network
+
+  # Webapp Application (for development)
+  webapp:
+    build:
+      context: .
+      dockerfile: apps/webapp/Dockerfile.dev
+    container_name: salesdex-webapp
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:3000}
+    volumes:
+      - ./apps/webapp/src:/app/apps/webapp/src
+      - ./apps/webapp/public:/app/apps/webapp/public
+    restart: unless-stopped
+    networks:
+      - salesdex-network
+
+networks:
+  salesdex-network:
+    driver: bridge

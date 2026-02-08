@@ -1,10 +1,11 @@
-import { LayoutDashboard, Users, Building2, Shield } from "lucide-react";
+import { LayoutDashboard, Users, Building2, Shield, BookOpen } from "lucide-react";
 
 export const ROUTES = {
     LOGIN: "/login",
     REGISTER: "/register",
     DASHBOARD: "/",
     SUPERADMIN: "/superadmin",
+    KNOWLEDGE_BASE: "/knowledge-base",
     ORGANIZATION: {
         CREATE: "/organization/create",
         SETTINGS: "/organization/settings",
@@ -35,6 +36,11 @@ export const SidebarRoutes = {
             url: ROUTES.DASHBOARD,
             icon: LayoutDashboard,
             isActive: true,
+        },
+        {
+            title: "Knowledge Base",
+            url: ROUTES.KNOWLEDGE_BASE,
+            icon: BookOpen,
         },
         {
             title: "Organization",

@@ -7,6 +7,7 @@ import { RegisterPage } from "@/features/auth/presentation/pages/register-page";
 import { OrganizationCreatePage } from "@/features/organization/presentation/pages/org-create-page";
 import { OrganizationSettingsPage } from "@/features/organization/presentation/pages/org-settings-page";
 import { SuperadminDashboardPage } from "@/features/system/presentation/pages/superadmin-dashboard-page";
+import { KnowledgeBasePage } from "@/features/knowledge-base/presentation/pages/knowledge-base-page";
 
 // Placeholder Components
 const DashboardPage = () => <div>Dashboard Home</div>;
@@ -43,6 +44,14 @@ const router = createBrowserRouter([
             { path: ROUTES.USERS.ADMINS, element: <AdminsPage /> },
             { path: ROUTES.USERS.STUDENTS, element: <StudentsPage /> },
             { path: ROUTES.ORGANIZATION.SETTINGS, element: <OrganizationSettingsPage /> },
+            { 
+                path: ROUTES.KNOWLEDGE_BASE, 
+                element: (
+                    <ProtectedRoute allowedRoles={["ADMIN", "MANAGER"]}>
+                        <KnowledgeBasePage />
+                    </ProtectedRoute>
+                )
+            },
             { 
                 path: ROUTES.SUPERADMIN, 
                 element: (

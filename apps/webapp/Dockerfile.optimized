@@ -8,13 +8,13 @@ RUN apk add --no-cache python3 make g++ \
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy only package files first (for better layer caching)
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
 COPY turbo.json ../
 COPY pnpm-workspace.yaml ../
 
-# Install pnpm
+# Install pnpm globally
 RUN npm install -g pnpm@10.28.0
 
 # Install dependencies
@@ -30,11 +30,11 @@ RUN pnpm run build
 FROM node:18-alpine AS production
 
 # Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+RUN apk add --no-cache dumb-init curl
 
-# Create app user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
+# Create app user for security
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
 
 # Set working directory
 WORKDIR /app
@@ -45,20 +45,25 @@ COPY pnpm-lock.yaml ./
 COPY turbo.json ../
 COPY pnpm-workspace.yaml ../
 
-# Install only production dependencies
+# Install pnpm globally
 RUN npm install -g pnpm@10.28.0
+
+# Install only production dependencies
 RUN pnpm install --frozen-lockfile --prod
 
 # Copy built application from base stage
 COPY --from=base /app/dist ./dist
+COPY --from=base /app/public ./public
 
 # Change ownership to nodejs user
 RUN chown -R nodejs:nodejs /app
+
+# Switch to non-root user
 USER nodejs
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node dist/healthcheck.js || exit 1
+  CMD curl -f http://localhost:3000/health || exit 1
 
 # Expose port
 EXPOSE 3000
