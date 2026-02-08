@@ -58,59 +58,24 @@ Task_Org_20: Implement frontend org management screen [DONE]
 
 ---
 
-Task_Sys_01: Create system config model access layer
-Description: Implement data access helpers for reading and writing system configuration values.
-
-Task_Sys_02: Implement system config read API
-Description: Add API endpoint to fetch global system configuration values.
-
-Task_Sys_03: Implement system config update API
-Description: Add API endpoint allowing super_admin to update system configuration values.
-
-Task_Sys_04: Enforce super_admin guard on system APIs
-Description: Restrict all system configuration endpoints to super_admin role only.
-
-Task_Sys_05: Configure global pricing setting
-Description: Store and retrieve global price-per-hour configuration used for billing.
-
-Task_Sys_06: Configure live analysis concurrency limit
-Description: Store and enforce maximum allowed concurrent live meetings across platform.
-
-Task_Sys_07: Implement feature flag configuration per org
-Description: Add ability to enable or disable specific features for organizations.
-
-Task_Sys_08: Implement org pause control
-Description: Allow super_admin to pause or unpause organizations via system API.
-
-Task_Sys_09: Implement manual wallet credit API
-Description: Allow super_admin to credit organization wallet balance manually.
-
-Task_Sys_10: Implement manual wallet debit API
-Description: Allow super_admin to debit organization wallet balance manually.
-
-Task_Sys_11: Add audit logging for system config changes
-Description: Log all system-level configuration changes with actor and timestamp.
-
-Task_Sys_12: Implement global usage metrics API
-Description: Provide aggregated usage and billing metrics across all organizations.
-
-Task_Sys_13: Implement superadmin dashboard UI shell
-Description: Create base UI layout for superadmin dashboard screens.
-
-Task_Sys_14: Display global metrics in dashboard
-Description: Show total orgs, usage hours, and revenue metrics in UI.
-
-Task_Sys_15: Implement org list and org detail views
-Description: Allow super_admin to view organizations and their current status.
-
-Task_Sys_16: Add org pause/unpause actions in UI
-Description: Enable pause and resume actions for organizations from dashboard.
-
-Task_Sys_17: Add frontend guards for superadmin routes
-Description: Prevent non-superadmin users from accessing system configuration UI.
-
-Task_Sys_18: Add tests for system config access control
-Description: Verify only super_admin can read or modify system configuration.
+Task_Sys_01: Create system config model access layer [DONE]
+Task_Sys_02: Implement system config read API [DONE]
+Task_Sys_03: Implement system config update API [DONE]
+Task_Sys_04: Enforce super_admin guard on system APIs [DONE]
+Task_Sys_05: Configure global pricing setting [DONE]
+Task_Sys_06: Configure live analysis concurrency limit [DONE]
+Task_Sys_07: Implement feature flag configuration per org [DONE]
+Task_Sys_08: Implement org pause control [DONE]
+Task_Sys_09: Implement manual wallet credit API [DONE]
+Task_Sys_10: Implement manual wallet debit API [DONE]
+Task_Sys_11: Add audit logging for system config changes [DONE]
+Task_Sys_12: Implement global usage metrics API [DONE]
+Task_Sys_13: Implement superadmin dashboard UI shell [DONE]
+Task_Sys_14: Display global metrics in dashboard [DONE]
+Task_Sys_15: Implement org list and org detail views [TODO]
+Task_Sys_16: Add org pause/unpause actions in UI [TODO]
+Task_Sys_17: Add frontend guards for superadmin routes [DONE]
+Task_Sys_18: Add tests for system config access control [TODO]
 
 
 ## Epic_04: Billing, Wallet & Hard Stop Enforcement

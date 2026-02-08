@@ -34,5 +34,29 @@ export const userRepository = new PrismaUserRepository(prisma);
 export const userService = new UserService(userRepository);
 export const userController = new UserController(userService);
 
+// System Feature (Epic 3)
+import {
+    PrismaSystemConfigRepository,
+    PrismaOrganizationFeatureRepository,
+    PrismaSystemAuditLogRepository,
+    PrismaMetricsRepository,
+} from '@/lib/persistence/prisma/system.repository';
+import { SystemService } from '@/features/system/system.service';
+import { SystemController } from '@/features/system/system.controller';
+
+export const systemConfigRepository = new PrismaSystemConfigRepository(prisma);
+export const orgFeatureRepository = new PrismaOrganizationFeatureRepository(prisma);
+export const auditLogRepository = new PrismaSystemAuditLogRepository(prisma);
+export const metricsRepository = new PrismaMetricsRepository(prisma);
+
+export const systemService = new SystemService(
+    systemConfigRepository,
+    orgFeatureRepository,
+    auditLogRepository,
+    metricsRepository,
+    orgRepository,
+);
+export const systemController = new SystemController(systemService);
+
 // Middleware
 export const authMiddleware = createAuthMiddleware(tokenService);

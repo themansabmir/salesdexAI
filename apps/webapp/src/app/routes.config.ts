@@ -1,9 +1,10 @@
-import { LayoutDashboard, Users, Building2, Settings } from "lucide-react";
+import { LayoutDashboard, Users, Building2, Shield } from "lucide-react";
 
 export const ROUTES = {
     LOGIN: "/login",
     REGISTER: "/register",
     DASHBOARD: "/",
+    SUPERADMIN: "/superadmin",
     ORGANIZATION: {
         CREATE: "/organization/create",
         SETTINGS: "/organization/settings",
@@ -54,6 +55,11 @@ export const SidebarRoutes = {
                     url: ROUTES.USERS.STUDENTS,
                 },
             ],
+        },
+        {
+            title: "Superadmin",
+            url: ROUTES.SUPERADMIN,
+            icon: Shield,
         },
     ],
     projects: [],

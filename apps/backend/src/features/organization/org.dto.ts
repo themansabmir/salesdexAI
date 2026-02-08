@@ -97,3 +97,23 @@ export type OrganizationResponse = {
     currency: string;
     createdAt: Date;
 };
+
+// Wallet adjustment DTO (for super_admin manual credit/debit)
+export const WalletAdjustmentSchema = z.object({
+    amount: z.number().positive(),
+    reason: z.string().min(1).max(500),
+});
+
+export type WalletAdjustmentRequest = z.infer<typeof WalletAdjustmentSchema>;
+
+export type WalletTransactionResponse = {
+    id: string;
+    organizationId: string;
+    type: 'CREDIT' | 'DEBIT';
+    amount: number;
+    balanceBefore: number;
+    balanceAfter: number;
+    description: string;
+    processedBy: string;
+    createdAt: Date;
+};

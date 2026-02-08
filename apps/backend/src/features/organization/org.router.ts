@@ -35,5 +35,9 @@ export const createOrganizationRouter = (
     router.patch('/members/role', orgController.updateMemberRole);
     router.delete('/members/:memberId', orgController.removeMember);
 
+    // Task_Sys_09, 10: Wallet manual credit/debit (super_admin only)
+    router.post('/:orgId/wallet/credit', requireRole('SUPER_ADMIN'), orgController.creditWallet);
+    router.post('/:orgId/wallet/debit', requireRole('SUPER_ADMIN'), orgController.debitWallet);
+
     return router;
 };

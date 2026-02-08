@@ -8,6 +8,8 @@ import {
     InvitationResponse,
     OrganizationMemberResponse,
     UpdateMemberRoleRequest,
+    WalletAdjustmentRequest,
+    WalletTransactionResponse,
 } from './org.dto';
 import { IAuthRepository } from '@/features/auth/auth.repository';
 import { Organization } from './org.entity';
@@ -363,6 +365,98 @@ export class OrganizationService {
         return this.mapInvitationToResponse(invitation);
     }
 
+    // Task_Sys_09: Manual wallet credit (super_admin only)
+    async creditWallet(
+        organizationId: string,
+        data: WalletAdjustmentRequest,
+        processedBy: string,
+    ): Promise<WalletTransactionResponse> {
+        return await prisma.$transaction(async (tx) => {
+            // Get current org
+            const org = await tx.organization.findUnique({
+                where: { id: organizationId },
+            });
+            if (!org) {
+                throw new Error('Organization not found');
+            }
+
+            const balanceBefore = Number(org.walletBalance);
+            const balanceAfter = balanceBefore + data.amount;
+
+            // Update wallet
+            await tx.organization.update({
+                where: { id: organizationId },
+                data: {
+                    walletBalance: balanceAfter,
+                },
+            });
+
+            // Create billing transaction
+            const transaction = await tx.billingTransaction.create({
+                data: {
+                    organizationId,
+                    type: 'CREDIT',
+                    amount: data.amount,
+                    balanceBefore,
+                    balanceAfter,
+                    description: `Manual credit: ${data.reason}`,
+                    processedBy,
+                },
+            });
+
+            return this.mapTransactionToResponse(transaction);
+        });
+    }
+
+    // Task_Sys_10: Manual wallet debit (super_admin only)
+    async debitWallet(
+        organizationId: string,
+        data: WalletAdjustmentRequest,
+        processedBy: string,
+    ): Promise<WalletTransactionResponse> {
+        return await prisma.$transaction(async (tx) => {
+            // Get current org
+            const org = await tx.organization.findUnique({
+                where: { id: organizationId },
+            });
+            if (!org) {
+                throw new Error('Organization not found');
+            }
+
+            const balanceBefore = Number(org.walletBalance);
+
+            // Prevent negative balance
+            if (balanceBefore < data.amount) {
+                throw new Error('Insufficient balance for debit');
+            }
+
+            const balanceAfter = balanceBefore - data.amount;
+
+            // Update wallet
+            await tx.organization.update({
+                where: { id: organizationId },
+                data: {
+                    walletBalance: balanceAfter,
+                },
+            });
+
+            // Create billing transaction
+            const transaction = await tx.billingTransaction.create({
+                data: {
+                    organizationId,
+                    type: 'DEBIT',
+                    amount: data.amount,
+                    balanceBefore,
+                    balanceAfter,
+                    description: `Manual debit: ${data.reason}`,
+                    processedBy,
+                },
+            });
+
+            return this.mapTransactionToResponse(transaction);
+        });
+    }
+
     private async sendInvitationEmail(email: string, token: string, role: string): Promise<void> {
         console.log(`[EMAIL] Invitation sent to ${email} with token ${token} for role ${role}`);
     }
@@ -396,6 +490,20 @@ export class OrganizationService {
             expiresAt: invitation.expiresAt,
             acceptedAt: invitation.acceptedAt,
             createdAt: invitation.createdAt,
+        };
+    }
+
+    private mapTransactionToResponse(transaction: any): WalletTransactionResponse {
+        return {
+            id: transaction.id,
+            organizationId: transaction.organizationId,
+            type: transaction.type,
+            amount: Number(transaction.amount),
+            balanceBefore: Number(transaction.balanceBefore),
+            balanceAfter: Number(transaction.balanceAfter),
+            description: transaction.description,
+            processedBy: transaction.processedBy,
+            createdAt: transaction.createdAt,
         };
     }
 }

@@ -7,14 +7,16 @@ import {
     CreateInvitationSchema,
     AcceptInvitationSchema,
     UpdateMemberRoleSchema,
+    WalletAdjustmentSchema,
 } from './org.dto';
+import { AuthenticatedRequest } from '@/types/auth';
 
 export class OrganizationController {
     constructor(private readonly orgService: OrganizationService) { }
 
     create = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const data = CreateOrganizationSchema.parse(req.body);
             const org = await this.orgService.createOrganization(userId, data);
             res.status(201).json(org);
@@ -25,7 +27,7 @@ export class OrganizationController {
 
     getMe = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const org = await this.orgService.getMyOrganization(userId);
             res.json(org);
         } catch (error) {
@@ -35,7 +37,7 @@ export class OrganizationController {
 
     update = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const data = UpdateOrganizationSchema.parse(req.body);
             const org = await this.orgService.updateOrganization(userId, data);
             res.json(org);
@@ -47,7 +49,7 @@ export class OrganizationController {
     // Task_Org_07: Update organization status (pause/archive)
     updateStatus = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const data = UpdateOrganizationStatusSchema.parse(req.body);
             const org = await this.orgService.updateOrganizationStatus(userId, data);
             res.json(org);
@@ -59,7 +61,7 @@ export class OrganizationController {
     // Task_Org_09: Invite user to organization
     inviteUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const data = CreateInvitationSchema.parse(req.body);
             const invitation = await this.orgService.inviteUser(userId, data);
             res.status(201).json(invitation);
@@ -71,7 +73,7 @@ export class OrganizationController {
     // Task_Org_12: Accept invitation
     acceptInvitation = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const data = AcceptInvitationSchema.parse(req.body);
             const org = await this.orgService.acceptInvitation(data.token, userId);
             res.json(org);
@@ -83,7 +85,7 @@ export class OrganizationController {
     // Task_Org_14: List organization members
     listMembers = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const members = await this.orgService.listOrganizationMembers(userId);
             res.json(members);
         } catch (error) {
@@ -94,7 +96,7 @@ export class OrganizationController {
     // Task_Org_15: Update member role
     updateMemberRole = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const data = UpdateMemberRoleSchema.parse(req.body);
             const member = await this.orgService.updateMemberRole(userId, data);
             res.json(member);
@@ -106,7 +108,7 @@ export class OrganizationController {
     // Task_Org_16: Remove member from organization
     removeMember = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const memberId = req.params.memberId as string;
             await this.orgService.removeMember(userId, memberId);
             res.status(204).send();
@@ -118,7 +120,7 @@ export class OrganizationController {
     // List invitations
     listInvitations = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const invitations = await this.orgService.listInvitations(userId);
             res.json(invitations);
         } catch (error) {
@@ -129,10 +131,36 @@ export class OrganizationController {
     // Revoke invitation
     revokeInvitation = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId = (req as any).user.sub;
+            const userId = (req as AuthenticatedRequest).user.sub;
             const invitationId = req.params.invitationId as string;
             const invitation = await this.orgService.revokeInvitation(userId, invitationId);
             res.json(invitation);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    // Task_Sys_09: Manual wallet credit (super_admin only)
+    creditWallet = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = (req as AuthenticatedRequest).user.sub;
+            const orgId = req.params.orgId as string;
+            const data = WalletAdjustmentSchema.parse(req.body);
+            const transaction = await this.orgService.creditWallet(orgId, data, userId);
+            res.json(transaction);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    // Task_Sys_10: Manual wallet debit (super_admin only)
+    debitWallet = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = (req as AuthenticatedRequest).user.sub;
+            const orgId = req.params.orgId as string;
+            const data = WalletAdjustmentSchema.parse(req.body);
+            const transaction = await this.orgService.debitWallet(orgId, data, userId);
+            res.json(transaction);
         } catch (error) {
             next(error);
         }
