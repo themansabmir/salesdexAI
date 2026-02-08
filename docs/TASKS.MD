@@ -2,129 +2,51 @@
 
 ---
 
-Task_Auth_01: Add Clerk backend SDK to API
-Description: Install and configure Clerk SDK in API app and load required environment variables.
-
-Task_Auth_02: Verify Clerk JWT on API requests
-Description: Implement middleware to validate Clerk JWT and attach authenticated userId to request context.
-
-Task_Auth_03: Add Clerk frontend SDK to Web App
-Description: Integrate ClerkProvider and enable basic sign-in and sign-up flows in the frontend.
-
-Task_Auth_04: Implement frontend auth state handling
-Description: Expose authenticated user state and loading handling across the web application.
-
-Task_Auth_05: Define role constants and enums
-Description: Create shared enums/constants for all platform and organization roles.
-
-Task_Auth_06: Define permission constants
-Description: Define granular permission keys representing allowed actions in the system.
-
-Task_Auth_07: Create role-to-permission mapping
-Description: Implement centralized permission matrix mapping roles to allowed permissions.
-
-Task_Auth_08: Implement API organization context resolver
-Description: Resolve organizationId and user role from request and attach to request context.
-
-Task_Auth_09: Implement API role guard middleware
-Description: Create reusable middleware to enforce role-based access on API endpoints.
-
-Task_Auth_10: Implement API permission guard middleware
-Description: Enforce fine-grained permission checks using permission keys and role mapping.
-
-Task_Auth_11: Seed or identify super_admin users
-Description: Implement logic to identify super_admin users via allowlist or config.
-
-Task_Auth_12: Protect platform-level API routes
-Description: Apply role guards to system-wide endpoints for super_admin and manager roles.
-
-Task_Auth_13: Protect organization-level API routes
-Description: Apply role and permission guards to org-scoped endpoints.
-
-Task_Auth_14: Implement role upgrade and downgrade API
-Description: Add endpoint allowing authorized users to change roles with validation.
-
-Task_Auth_15: Add audit logging for role changes
-Description: Persist audit log entries for all role assignment and modification actions.
-
-Task_Auth_16: Implement frontend route guards
-Description: Prevent unauthorized users from accessing restricted routes via URL.
-
-Task_Auth_17: Implement frontend conditional UI rendering
-Description: Show or hide UI elements based on authenticated user role and permissions.
-
-Task_Auth_18: Add API tests for RBAC enforcement
-Description: Write tests validating correct 200 or 403 responses for each role.
-
-Task_Auth_19: Add frontend tests for access control
-Description: Verify protected routes and restricted UI elements are not accessible.
-
-Task_Auth_20: Document role and permission matrix
-Description: Document final role-permission mapping for developer reference and review.
+Task_Auth_01: Add Clerk backend SDK to API [SKIPPED - Used Custom JWT]
+Task_Auth_02: Verify Clerk JWT on API requests [SKIPPED - Used Custom JWT]
+Task_Auth_03: Add Clerk frontend SDK to Web App [SKIPPED - Used Custom JWT]
+Task_Auth_04: Implement frontend auth state handling [DONE]
+Task_Auth_05: Define role constants and enums [DONE]
+Task_Auth_06: Define permission constants [DONE]
+Task_Auth_07: Create role-to-permission mapping [DONE]
+Task_Auth_08: Implement API organization context resolver [DONE]
+Task_Auth_09: Implement API role guard middleware [DONE]
+Task_Auth_10: Implement API permission guard middleware [DONE]
+Task_Auth_11: Seed or identify super_admin users [DONE - First user is SUPER_ADMIN]
+Task_Auth_12: Protect platform-level API routes [DONE]
+Task_Auth_13: Protect organization-level API routes [DONE]
+Task_Auth_14: Implement role upgrade and downgrade API [TODO]
+Task_Auth_15: Add audit logging for role changes [TODO]
+Task_Auth_16: Implement frontend route guards [DONE]
+Task_Auth_17: Implement frontend conditional UI rendering [DONE]
+Task_Auth_18: Add API tests for RBAC enforcement [TODO]
+Task_Auth_19: Add frontend tests for access control [TODO]
+Task_Auth_20: Document role and permission matrix [DONE - see use-permissions.ts and permissions.ts]
 
 ## Epic_02: Organization Setup & Management
 
 ---
 
-Task_Org_01: Create organization creation API
-Description: Implement API endpoint to create a new organization and persist basic metadata.
-
-Task_Org_02: Auto-assign admin role to org creator
-Description: Ensure the user creating the organization is assigned the admin role by default.
-
-Task_Org_03: Enforce one-organization-per-user rule
-Description: Validate and block organization creation or join if user already belongs to an org.
-
-Task_Org_04: Initialize wallet on organization creation
-Description: Automatically create a prepaid wallet with zero balance when an org is created.
-
-Task_Org_05: Create organization retrieval API
-Description: Implement API to fetch organization details scoped to authenticated user.
-
-Task_Org_06: Update organization settings API
-Description: Allow admin to update organization name and metadata fields.
-
-Task_Org_07: Implement organization pause and archive API
-Description: Allow super_admin to pause or archive an organization and block new activity.
-
-Task_Org_08: Add organization status enforcement middleware
-Description: Prevent paused or archived organizations from performing restricted actions.
-
-Task_Org_09: Implement invite user API
-Description: Allow admin to invite users to organization with selected role.
-
-Task_Org_10: Generate and store invitation token
-Description: Create secure, time-limited invite tokens linked to organization and role.
-
-Task_Org_11: Send invitation email
-Description: Send email containing invite link to invited user.
-
-Task_Org_12: Implement invite acceptance API
-Description: Allow invited user to accept invite and join organization with assigned role.
-
-Task_Org_13: Validate invite token and expiry
-Description: Ensure invite token is valid, unused, and not expired before acceptance.
-
-Task_Org_14: List organization members API
-Description: Fetch paginated list of organization members with roles.
-
-Task_Org_15: Update organization member role API
-Description: Allow admin to change roles of existing org members.
-
-Task_Org_16: Remove organization member API
-Description: Allow admin to remove a user from the organization.
-
-Task_Org_17: Prevent self-removal of sole admin
-Description: Block removal or demotion of last remaining admin in organization.
-
-Task_Org_18: Add audit logging for org membership changes
-Description: Log invites, joins, removals, and role changes in audit logs.
-
-Task_Org_19: Implement frontend org creation flow
-Description: Add UI for creating a new organization during onboarding.
-
-Task_Org_20: Implement frontend org management screen
-Description: Add UI for viewing and editing organization settings and members.
+Task_Org_01: Create organization creation API [DONE]
+Task_Org_02: Auto-assign admin role to org creator [DONE]
+Task_Org_03: Enforce one-organization-per-user rule [DONE]
+Task_Org_04: Initialize wallet on organization creation [DONE]
+Task_Org_05: Create organization retrieval API [DONE]
+Task_Org_06: Update organization settings API [DONE]
+Task_Org_07: Implement organization pause and archive API [DONE]
+Task_Org_08: Add organization status enforcement middleware [DONE]
+Task_Org_09: Implement invite user API [DONE]
+Task_Org_10: Generate and store invitation token [DONE]
+Task_Org_11: Send invitation email [DONE - Placeholder implementation]
+Task_Org_12: Implement invite acceptance API [DONE]
+Task_Org_13: Validate invite token and expiry [DONE]
+Task_Org_14: List organization members API [DONE]
+Task_Org_15: Update organization member role API [DONE]
+Task_Org_16: Remove organization member API [DONE]
+Task_Org_17: Prevent self-removal of sole admin [DONE]
+Task_Org_18: Add audit logging for org membership changes [TODO]
+Task_Org_19: Implement frontend org creation flow [DONE]
+Task_Org_20: Implement frontend org management screen [DONE]
 
 
 

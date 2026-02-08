@@ -1,6 +1,9 @@
 import { Router, Request, Response } from 'express';
-import { authController } from '@/container';
+import { authController, orgController, userController, tokenService } from '@/container';
 import { createAuthRouter } from '@/features/auth/auth.router';
+import { createOrganizationRouter } from '@/features/organization/org.router';
+import { createUserRouter } from '@/features/user/user.router';
+import { requireRole } from '../middleware/role-guard.middleware';
 
 export const createMainRouter = (): Router => {
     const router = Router();
@@ -11,7 +14,18 @@ export const createMainRouter = (): Router => {
     });
 
     // Feature routes
-    router.use('/auth', createAuthRouter(authController));
+    router.use('/auth', createAuthRouter(authController, tokenService));
+    router.use('/organizations', createOrganizationRouter(orgController, tokenService));
+    router.use('/users', createUserRouter(userController, tokenService));
+
+    // Platform routes (SuperAdmin only)
+    router.get('/admin/stats', requireRole('SUPER_ADMIN'), (req: Request, res: Response) => {
+        res.json({
+            message: 'Platform Statistics',
+            totalOrganizations: 1, // Mock
+            totalUsers: 1, // Mock
+        });
+    });
 
     return router;
 };

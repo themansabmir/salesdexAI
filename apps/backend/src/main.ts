@@ -1,10 +1,12 @@
 import { createApp } from '@/app';
 import { config } from '@/config';
 import { connectDatabase } from '@/lib/prisma';
+import { ensureSuperAdmin } from '@/lib/init/super-admin';
 
 const bootstrap = async () => {
     try {
         await connectDatabase();
+        await ensureSuperAdmin();
         const app = createApp();
 
         app.listen(config.PORT, () => {

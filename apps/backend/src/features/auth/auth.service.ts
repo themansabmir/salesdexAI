@@ -25,7 +25,8 @@ export class AuthService {
         const accessToken = this.tokenService.sign({
             sub: user.id,
             email: user.email,
-            role: user.platformRole || user.organizationRole,
+            platformRole: user.platformRole,
+            organizationRole: user.organizationRole,
             orgId: user.organizationId,
         });
 
@@ -42,17 +43,22 @@ export class AuthService {
         }
 
         const hashedPassword = await this.passwordHasher.hash(data.password);
+        const userCount = await this.authRepository.countUsers();
 
         const user = await this.authRepository.create({
             email: data.email,
             password: hashedPassword,
             firstName: data.firstName,
             lastName: data.lastName,
+            platformRole: userCount === 0 ? 'SUPER_ADMIN' : null,
         });
 
         const accessToken = this.tokenService.sign({
             sub: user.id,
             email: user.email,
+            platformRole: user.platformRole,
+            organizationRole: user.organizationRole,
+            orgId: user.organizationId,
         });
 
         return {

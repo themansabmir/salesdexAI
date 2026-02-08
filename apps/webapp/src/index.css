@@ -1,37 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-background: oklch(0.129 0.042 264.695);
-  --color-foreground: oklch(0.984 0.003 247.858);
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(224 71.4% 4.1%);
 
-  --color-card: oklch(0.129 0.042 264.695);
-  --color-card-foreground: oklch(0.984 0.003 247.858);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(224 71.4% 4.1%);
 
-  --color-popover: oklch(0.129 0.042 264.695);
-  --color-popover-foreground: oklch(0.984 0.003 247.858);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(224 71.4% 4.1%);
 
-  --color-primary: oklch(0.585 0.233 277.117);
-  --color-primary-foreground: oklch(0.984 0.003 247.858);
+  --color-primary: hsl(24 95% 53%);
+  --color-primary-foreground: hsl(0 0% 100%);
 
-  --color-secondary: oklch(0.208 0.042 265.755);
-  --color-secondary-foreground: oklch(0.984 0.003 247.858);
+  --color-secondary: hsl(220 14.3% 95.9%);
+  --color-secondary-foreground: hsl(220.9 39.3% 11%);
 
-  --color-muted: oklch(0.208 0.042 265.755);
-  --color-muted-foreground: oklch(0.704 0.04 256.788);
+  --color-muted: hsl(220 14.3% 95.9%);
+  --color-muted-foreground: hsl(220 8.9% 46.1%);
 
-  --color-accent: oklch(0.208 0.042 265.755);
-  --color-accent-foreground: oklch(0.984 0.003 247.858);
+  --color-accent: hsl(220 14.3% 95.9%);
+  --color-accent-foreground: hsl(220.9 39.3% 11%);
 
-  --color-destructive: oklch(0.577 0.245 27.325);
-  --color-destructive-foreground: oklch(0.984 0.003 247.858);
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(210 20% 98%);
 
-  --color-border: oklch(0.208 0.042 265.755);
-  --color-input: oklch(0.208 0.042 265.755);
-  --color-ring: oklch(0.585 0.233 277.117);
+  --color-success: hsl(142 76% 36%);
+  --color-success-foreground: hsl(0 0% 98%);
+
+  --color-warning: hsl(38 92% 50%);
+  --color-warning-foreground: hsl(0 0% 98%);
+
+  --color-info: hsl(199 89% 48%);
+  --color-info-foreground: hsl(0 0% 98%);
+
+  --color-border: hsl(220 13% 91%);
+  --color-input: hsl(220 13% 91%);
+  --color-ring: hsl(224 71.4% 4.1%);
 
   --radius-lg: 0.5rem;
   --radius-md: calc(0.5rem - 2px);
   --radius-sm: calc(0.5rem - 4px);
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 
   @keyframes accordion-down {
     from { height: 0; }
@@ -51,13 +67,25 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/30;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    @apply bg-background text-foreground antialiased selection:bg-primary/20;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: 'cv11', 'ss01', 'rlig' 1, 'calt' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
   }
 }
 
 @layer utilities {
   .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+  .gradient-primary {
+    @apply bg-gradient-to-br from-primary/10 via-transparent to-primary/5;
   }
 }

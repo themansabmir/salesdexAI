@@ -26,6 +26,19 @@ enum OrganizationRole {
   SALES_PERSON // Attends calls, receives feedback
 }
 
+enum OrganizationStatus {
+  ACTIVE   // Normal operation
+  PAUSED   // Temporarily blocked, no new activity
+  ARCHIVED // Permanently closed, data preserved
+}
+
+enum InvitationStatus {
+  PENDING   // Invitation sent, awaiting acceptance
+  ACCEPTED  // User accepted and joined
+  EXPIRED   // Token expired without acceptance
+  REVOKED   // Cancelled by admin
+}
+
 enum MeetingStatus {
   SCHEDULED   // Meeting scheduled but not started
   IN_PROGRESS // Bot joined, actively capturing
@@ -107,7 +120,8 @@ model Organization {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique // URL-friendly identifier
-  isActive  Boolean  @default(true)
+  status    OrganizationStatus @default(ACTIVE)
+  isActive  Boolean  @default(true) // Kept for backward compatibility
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -122,6 +136,7 @@ model Organization {
 
   // Relations
   users                User[]
+  invitations          OrganizationInvitation[]
   knowledgeDocuments   KnowledgeDocument[]
   competitors          Competitor[]
   meetings             Meeting[]
@@ -131,7 +146,46 @@ model Organization {
   improvementMetrics   ImprovementMetric[]
 
   @@index([slug])
+  @@index([status])
   @@index([isActive])
+}
+
+// ============================================================================
+// ORGANIZATION INVITATIONS
+// ============================================================================
+
+model OrganizationInvitation {
+  id        String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Invitee details
+  email     String
+  role      OrganizationRole // Role to assign when accepted
+
+  // Invitation token
+  token     String   @unique
+  status    InvitationStatus @default(PENDING)
+
+  // Expiry (default 7 days)
+  expiresAt DateTime
+  acceptedAt DateTime?
+  acceptedByUserId String?
+
+  // Tracking
+  invitedBy String // User ID who sent the invite
+  revokedBy String? // User ID who revoked (if applicable)
+  revokedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([organizationId, email, status], name: "unique_pending_invite")
+  @@index([organizationId])
+  @@index([token])
+  @@index([email])
+  @@index([status])
+  @@index([expiresAt])
 }
 
 // ============================================================================

@@ -1,0 +1,345 @@
+{
+  "info": {
+    "_postman_id": "salesdex-api",
+    "name": "SalesDex API",
+    "description": "SalesDex API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@salesdex.com\",\n  \"password\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "description": "Login with email and password.\n\n**Request Body:**\n```json\n{\n  \"email\": \"string\" (email format, required),\n  \"password\": \"string\" (min 8 chars, required)\n}\n```\n\n**Response (200):**\n```json\n{\n  \"user\": {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"firstName\": \"string | null\",\n    \"lastName\": \"string | null\",\n    \"platformRole\": \"string | null\",\n    \"organizationRole\": \"string | null\",\n    \"organizationId\": \"string | null\"\n  },\n  \"accessToken\": \"string\"\n}\n```"
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "description": "Register a new user.\n\n**Request Body:**\n```json\n{\n  \"email\": \"string\" (email format, required),\n  \"password\": \"string\" (min 8 chars, required),\n  \"firstName\": \"string\" (optional),\n  \"lastName\": \"string\" (optional)\n}\n```\n\n**Response (201):**\n```json\n{\n  \"user\": {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"firstName\": \"string | null\",\n    \"lastName\": \"string | null\",\n    \"platformRole\": \"string | null\",\n    \"organizationRole\": \"string | null\",\n    \"organizationId\": \"string | null\"\n  },\n  \"accessToken\": \"string\"\n}\n```"
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "me"]
+            },
+            "description": "Get current authenticated user.\n\n**Headers:**\n- Authorization: Bearer {token} (required)\n\n**Response (200):**\n```json\n{\n  \"id\": \"string\",\n  \"email\": \"string\",\n  \"firstName\": \"string | null\",\n  \"lastName\": \"string | null\",\n  \"platformRole\": \"string | null\",\n  \"organizationRole\": \"string | null\",\n  \"organizationId\": \"string | null\"\n}\n```"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Organization",
+      "item": [
+        {
+          "name": "Create Organization",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Organization\",\n  \"slug\": \"my-org\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations"]
+            },
+            "description": "Create a new organization. Requires authentication.\n\n**Request Body:**\n```json\n{\n  \"name\": \"string\" (min 2, max 100, required),\n  \"slug\": \"string\" (min 2, max 50, optional)\n}\n```\n\n**Response (201):**\n```json\n{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"slug\": \"string\",\n  \"isActive\": \"boolean\",\n  \"walletBalance\": \"number\",\n  \"currency\": \"string\",\n  \"createdAt\": \"Date\"\n}\n```"
+          }
+        },
+        {
+          "name": "Get My Organization",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "me"]
+            },
+            "description": "Get current user's organization. Requires authentication.\n\n**Headers:**\n- Authorization: Bearer {token} (required)\n\n**Response (200):**\n```json\n{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"slug\": \"string\",\n  \"isActive\": \"boolean\",\n  \"walletBalance\": \"number\",\n  \"currency\": \"string\",\n  \"createdAt\": \"Date\"\n}\n```"
+          }
+        },
+        {
+          "name": "Update My Organization",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Organization Name\",\n  \"isActive\": true,\n  \"liveAnalysisEnabled\": true,\n  \"mockCallsEnabled\": false,\n  \"maxConcurrentCalls\": 10\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "me"]
+            },
+            "description": "Update current user's organization. Requires authentication.\n\n**Request Body:**\n```json\n{\n  \"name\": \"string\" (min 2, max 100, optional),\n  \"isActive\": \"boolean\" (optional),\n  \"liveAnalysisEnabled\": \"boolean\" (optional),\n  \"mockCallsEnabled\": \"boolean\" (optional),\n  \"maxConcurrentCalls\": \"number\" (optional)\n}\n```\n\n**Response (200):**\n```json\n{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"slug\": \"string\",\n  \"isActive\": \"boolean\",\n  \"walletBalance\": \"number\",\n  \"currency\": \"string\",\n  \"createdAt\": \"Date\"\n}\n```"
+          }
+        },
+        {
+          "name": "Update Organization Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PAUSED\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/me/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "me", "status"]
+            },
+            "description": "Update organization status (ACTIVE, PAUSED, ARCHIVED). Requires SUPER_ADMIN role.\n\n**Request Body:**\n```json\n{\n  \"status\": \"ACTIVE | PAUSED | ARCHIVED\" (required)\n}\n```\n\n**Response (200):**\n```json\n{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"slug\": \"string\",\n  \"status\": \"string\",\n  \"isActive\": \"boolean\",\n  \"walletBalance\": \"number\",\n  \"currency\": \"string\",\n  \"createdAt\": \"Date\"\n}\n```"
+          }
+        },
+        {
+          "name": "List Organization Members",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/members",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "members"]
+            },
+            "description": "List all organization members. Requires authentication and org membership.\n\n**Response (200):**\n```json\n[\n  {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"firstName\": \"string | null\",\n    \"lastName\": \"string | null\",\n    \"role\": \"ADMIN | ORG_MANAGER | SALES_PERSON\",\n    \"joinedAt\": \"Date\"\n  }\n]\n```"
+          }
+        },
+        {
+          "name": "Update Member Role",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"user-uuid\",\n  \"role\": \"ORG_MANAGER\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/members/role",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "members", "role"]
+            },
+            "description": "Update a member's role. Requires ADMIN role.\n\n**Request Body:**\n```json\n{\n  \"userId\": \"string\" (required),\n  \"role\": \"ADMIN | ORG_MANAGER | SALES_PERSON\" (required)\n}\n```\n\n**Response (200):**\n```json\n{\n  \"id\": \"string\",\n  \"email\": \"string\",\n  \"firstName\": \"string | null\",\n  \"lastName\": \"string | null\",\n  \"role\": \"string\",\n  \"joinedAt\": \"Date\"\n}\n```"
+          }
+        },
+        {
+          "name": "Remove Member",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/members/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "members", "{{userId}}"]
+            },
+            "description": "Remove a member from organization. Requires ADMIN role. Cannot remove last admin.\n\n**Response (204):** No content"
+          }
+        },
+        {
+          "name": "Invite User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newuser@example.com\",\n  \"role\": \"SALES_PERSON\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/invitations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "invitations"]
+            },
+            "description": "Invite a user to the organization. Requires ADMIN role.\n\n**Request Body:**\n```json\n{\n  \"email\": \"string\" (email format, required),\n  \"role\": \"ADMIN | ORG_MANAGER | SALES_PERSON\" (required)\n}\n```\n\n**Response (201):**\n```json\n{\n  \"id\": \"string\",\n  \"email\": \"string\",\n  \"role\": \"string\",\n  \"status\": \"PENDING\",\n  \"token\": \"string\",\n  \"expiresAt\": \"Date\",\n  \"createdAt\": \"Date\"\n}\n```"
+          }
+        },
+        {
+          "name": "List Invitations",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/invitations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "invitations"]
+            },
+            "description": "List all organization invitations. Requires ADMIN role.\n\n**Response (200):**\n```json\n[\n  {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"role\": \"string\",\n    \"status\": \"PENDING | ACCEPTED | EXPIRED | REVOKED\",\n    \"token\": \"string\",\n    \"expiresAt\": \"Date\",\n    \"acceptedAt\": \"Date | null\",\n    \"createdAt\": \"Date\"\n  }\n]\n```"
+          }
+        },
+        {
+          "name": "Revoke Invitation",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/invitations/{{invitationId}}/revoke",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "invitations", "{{invitationId}}", "revoke"]
+            },
+            "description": "Revoke a pending invitation. Requires ADMIN role.\n\n**Response (200):**\n```json\n{\n  \"id\": \"string\",\n  \"email\": \"string\",\n  \"role\": \"string\",\n  \"status\": \"REVOKED\",\n  \"token\": \"string\",\n  \"expiresAt\": \"Date\",\n  \"revokedBy\": \"string\",\n  \"revokedAt\": \"Date\"\n}\n```"
+          }
+        },
+        {
+          "name": "Accept Invitation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"invite-token-string\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/organizations/accept-invite",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "organizations", "accept-invite"]
+            },
+            "description": "Accept an organization invitation.\n\n**Request Body:**\n```json\n{\n  \"token\": \"string\" (required)\n}\n```\n\n**Response (200):**\n```json\n{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"slug\": \"string\",\n  \"status\": \"string\",\n  \"walletBalance\": \"number\",\n  \"currency\": \"string\"\n}\n```"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users"]
+            },
+            "description": "List all users. Requires SUPER_ADMIN role.\n\n**Headers:**\n- Authorization: Bearer {token} (required)\n\n**Response (200):**\n```json\n[\n  {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"firstName\": \"string | null\",\n    \"lastName\": \"string | null\",\n    \"platformRole\": \"string | null\",\n    \"organizationRole\": \"string | null\",\n    \"organizationId\": \"string | null\"\n  }\n]\n```"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "{{userId}}"]
+            },
+            "description": "Get a user by ID. Requires SUPER_ADMIN role.\n\n**Headers:**\n- Authorization: Bearer {token} (required)\n\n**Response (200):**\n```json\n{\n  \"id\": \"string\",\n  \"email\": \"string\",\n  \"firstName\": \"string | null\",\n  \"lastName\": \"string | null\",\n  \"platformRole\": \"string | null\",\n  \"organizationRole\": \"string | null\",\n  \"organizationId\": \"string | null\"\n}\n```"
+          }
+        },
+        {
+          "name": "Update User Role",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"platformRole\": \"SUPER_ADMIN\",\n  \"organizationRole\": \"ADMIN\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{userId}}/role",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users", "{{userId}}", "role"]
+            },
+            "description": "Update user roles. Requires SUPER_ADMIN role.\n\n**Request Body:**\n```json\n{\n  \"platformRole\": \"SUPER_ADMIN | MANAGER | null\" (optional),\n  \"organizationRole\": \"ADMIN | ORG_MANAGER | SALES_PERSON | null\" (optional)\n}\n```\n\n**Response (200):**\n```json\n{\n  \"id\": \"string\",\n  \"email\": \"string\",\n  \"firstName\": \"string | null\",\n  \"lastName\": \"string | null\",\n  \"platformRole\": \"string | null\",\n  \"organizationRole\": \"string | null\",\n  \"organizationId\": \"string | null\"\n}\n```"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

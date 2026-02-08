@@ -11,7 +11,7 @@ export class PrismaAuthRepository implements IAuthRepository {
             where: { email },
         });
         if (!user) return null;
-        return this.mapToEntity(user);
+        return this.mapToEntityWithPassword(user);
     }
 
     async findById(id: string): Promise<User | null> {
@@ -26,7 +26,8 @@ export class PrismaAuthRepository implements IAuthRepository {
         const user = await this.prisma.user.create({
             data: {
                 email: data.email!,
-                clerkId: `custom_${Date.now()}`, // Placeholder since we're using custom JWT
+                password: data.password,
+                clerkId: `custom_${Date.now()}`,
                 firstName: data.firstName,
                 lastName: data.lastName,
                 organizationRole: data.organizationRole as OrganizationRole | null,
@@ -36,11 +37,44 @@ export class PrismaAuthRepository implements IAuthRepository {
         return this.mapToEntity(user);
     }
 
+    async update(id: string, data: Partial<User>): Promise<User> {
+        const user = await this.prisma.user.update({
+            where: { id },
+            data: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                platformRole: data.platformRole as PlatformRole | null,
+                organizationRole: data.organizationRole as OrganizationRole | null,
+                organizationId: data.organizationId,
+            },
+        });
+        return this.mapToEntity(user);
+    }
+
+    async countUsers(): Promise<number> {
+        return this.prisma.user.count();
+    }
+
     private mapToEntity(user: any): User {
         return {
             id: user.id,
             email: user.email,
-            password: user.password, // In a real app, you might have a password field in Prisma
+            // password is intentionally excluded - use findByEmailWithPassword for auth operations
+            firstName: user.firstName,
+            lastName: user.lastName,
+            platformRole: user.platformRole,
+            organizationRole: user.organizationRole,
+            organizationId: user.organizationId,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        };
+    }
+
+    private mapToEntityWithPassword(user: any): User {
+        return {
+            id: user.id,
+            email: user.email,
+            password: user.password,
             firstName: user.firstName,
             lastName: user.lastName,
             platformRole: user.platformRole,

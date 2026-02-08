@@ -1,8 +1,13 @@
-import { LayoutDashboard, Users } from "lucide-react";
+import { LayoutDashboard, Users, Building2, Settings } from "lucide-react";
 
 export const ROUTES = {
     LOGIN: "/login",
+    REGISTER: "/register",
     DASHBOARD: "/",
+    ORGANIZATION: {
+        CREATE: "/organization/create",
+        SETTINGS: "/organization/settings",
+    },
     USERS: {
         LIST: "/users",
         ADMINS: "/users/admins",
@@ -29,6 +34,11 @@ export const SidebarRoutes = {
             url: ROUTES.DASHBOARD,
             icon: LayoutDashboard,
             isActive: true,
+        },
+        {
+            title: "Organization",
+            url: ROUTES.ORGANIZATION.SETTINGS,
+            icon: Building2,
         },
         {
             title: "Users",
