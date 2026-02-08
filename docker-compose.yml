@@ -25,74 +25,76 @@ services:
     networks:
       - salesdex-network
 
-  # MinIO Client (for initial setup and testing)
+  # MinIO Client (for bucket and webhook setup)
   minio-client:
     image: minio/mc:latest
     container_name: salesdex-minio-client
     depends_on:
       minio:
         condition: service_healthy
-      backend:
-        condition: service_started
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin123
-      - WEBHOOK_SECRET=dev-webhook-secret-change-in-production
-      - WEBHOOK_ENDPOINT=http://backend:3000/documents/upload/confirm
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-dev-webhook-secret-change-in-production}
+      - WEBHOOK_ENDPOINT=${WEBHOOK_ENDPOINT:-http://host.docker.internal:5000/api/v1/knowledge/documents/upload/confirm}
     entrypoint: >
-      /bin/sh -c "
+      /bin/sh -c '
       /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin123 &&
-      /usr/bin/mc mb myminio/uploads &&
-      /usr/bin/mc mb myminio/documents &&
-      /usr/bin/mc mb myminio/competitors &&
+      /usr/bin/mc mb myminio/uploads 2>/dev/null || true &&
+      /usr/bin/mc mb myminio/documents 2>/dev/null || true &&
+      /usr/bin/mc mb myminio/competitors 2>/dev/null || true &&
       /usr/bin/mc policy set public myminio/uploads &&
       
       # Configure webhooks for document processing
-      echo 'Setting up webhooks for document processing...' &&
+      echo "Setting up webhooks for document processing..." &&
       
       # Webhook for document uploads
       /usr/bin/mc admin config set myminio notify_webhook:document_upload \
-        endpoint=http://backend:3000/documents/upload/confirm \
+        endpoint=$$WEBHOOK_ENDPOINT \
         auth_token=hmac \
         secret=$$WEBHOOK_SECRET \
         queue_dir=/tmp/webhook-queue \
         queue_limit=1000 &&
       
-      # Add webhook event for document bucket
+      # Add webhook events for document bucket
       /usr/bin/mc event add myminio/documents arn:minio:sqs::webhook:document_upload \
-        --suffix=.pdf \
-        --suffix=.docx \
-        --suffix=.txt \
-        --suffix=.md \
-        --event=put &&
+        --suffix .pdf \
+        --suffix .docx \
+        --suffix .txt \
+        --suffix .md \
+        --event put &&
       
-      # Add webhook event for uploads bucket  
+      # Add webhook events for uploads bucket  
       /usr/bin/mc event add myminio/uploads arn:minio:sqs::webhook:document_upload \
-        --suffix=.pdf \
-        --suffix=.docx \
-        --suffix=.txt \
-        --suffix=.md \
-        --event=put &&
+        --suffix .pdf \
+        --suffix .docx \
+        --suffix .txt \
+        --suffix .md \
+        --event put &&
       
-      echo 'MinIO buckets and webhooks configured successfully' &&
-      echo 'Webhook endpoint: $$WEBHOOK_ENDPOINT' &&
-      echo 'Webhook secret: [REDACTED]' &&
+      echo "MinIO buckets and webhooks configured successfully" &&
+      echo "Webhook endpoint: $$WEBHOOK_ENDPOINT" &&
+      echo "Webhook secret: [REDACTED]" &&
+      echo "Testing webhook configuration..." &&
+      /usr/bin/mc admin config get myminio notify_webhook &&
+      echo "Event configurations:" &&
+      /usr/bin/mc event list myminio &&
       sleep infinity
-      "
+      '
     networks:
       - salesdex-network
 
   # Backend Application
   backend:
     build:
-      context: ./apps/backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/backend/Dockerfile
     container_name: salesdex-backend
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/salesdex
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
       - MINIO_ENDPOINT=minio
       - MINIO_PORT=9000
       - MINIO_USE_SSL=false
@@ -101,37 +103,33 @@ services:
       - MINIO_BUCKET=uploads
       - MINIO_REGION=us-east-1
       - FILE_UPLOAD_ADAPTER=minio
-      - WEBHOOK_SECRET=dev-webhook-secret-change-in-production
-      - WEBHOOK_ENDPOINT=http://backend:3000/documents/upload/confirm
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-dev-webhook-secret-change-in-production}
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key}
     depends_on:
       - minio
-    volumes:
-      - ./apps/backend/src:/app/src
-      - ./apps/backend/prisma:/app/prisma
+    restart: unless-stopped
     networks:
       - salesdex-network
-    restart: unless-stopped
 
-  # PostgreSQL Database (optional - if you need it)
-  postgres:
-    image: postgres:15-alpine
-    container_name: salesdex-postgres
-    environment:
-      - POSTGRES_DB=salesdex
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+  # Webapp Application
+  webapp:
+    build:
+      context: .
+      dockerfile: apps/webapp/Dockerfile
+    container_name: salesdex-webapp
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:3000}
+    depends_on:
+      - backend
+    restart: unless-stopped
     networks:
       - salesdex-network
-    restart: unless-stopped
 
 volumes:
   minio_data:
-    driver: local
-  postgres_data:
     driver: local
 
 networks:

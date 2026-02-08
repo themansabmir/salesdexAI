@@ -11,6 +11,16 @@ export const createWebhookAuthMiddleware = (secret: string) => {
             const timestamp = req.headers['x-webhook-timestamp'] as string;
             
             if (!signature || !timestamp) {
+                const authHeader = (req.headers['authorization'] as string | undefined) ?? '';
+                const hmacMatch = authHeader.match(/hmac\s+secret=(.+)/i);
+                if (hmacMatch && hmacMatch[1] === secret) {
+                    return next();
+                }
+                console.warn('[webhook-auth] Missing headers', {
+                    signature: Boolean(signature),
+                    timestamp: Boolean(timestamp),
+                    receivedHeaders: req.headers,
+                });
                 return res.status(401).json({ 
                     message: 'Missing webhook authentication headers' 
                 });
@@ -35,6 +45,11 @@ export const createWebhookAuthMiddleware = (secret: string) => {
                 .digest('hex');
 
             if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+                console.warn('[webhook-auth] Signature mismatch', {
+                    signature,
+                    expectedSignature,
+                    body: req.body,
+                });
                 return res.status(401).json({ 
                     message: 'Invalid webhook signature' 
                 });
